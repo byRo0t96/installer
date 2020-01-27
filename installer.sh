@@ -1,14 +1,16 @@
 #!/bin/bash
-
-red="\e[0;31m"
-green="\e[0;32m"
-off="\e[0m"
+# v.0.0.2
+# installer
+# Coded by: Ro0t-96
+# Github: https://github.com/byRo0t96
+#!/bin/bash
+printf '\033]2;installer\a'
 resize -s 30 100 > /dev/null
 function banner() {
 clear
 printf "\e[1;31m"
 echo " ▄█  ███▄▄▄▄      ▄████████     ███        ▄████████  ▄█        ▄█          ▄████████    ▄████████ ";
-echo "███  ███▀▀▀██▄   ███    ███ ▀█████████▄   ███    ███ ███       ███ v.0.0.1 ███    ███   ███    ███ ";
+echo "███  ███▀▀▀██▄   ███    ███ ▀█████████▄   ███    ███ ███       ███ v.0.0.2 ███    ███   ███    ███ ";
 echo "███▌ ███   ███   ███    █▀     ▀███▀▀██   ███    ███ ███       ███         ███    █▀    ███    ███ ";
 echo "███▌ ███   ███   ███            ███   ▀   ███    ███ ███       ███        ▄███▄▄▄      ▄███▄▄▄▄██▀ ";
 echo "███▌ ███   ███ ▀███████████     ███     ▀███████████ ███       ███       ▀▀███▀▀▀     ▀▀███▀▀▀▀▀   ";
@@ -45,7 +47,7 @@ if [ -d "/usr/share/$foldername" ]; then
       sudo rm -r "/usr/share/$foldername"
       sudo rm "/usr/share/icons/$appicon"
       sudo rm "/usr/share/applications/$foldername.desktop"
-      sudo rm -r "/usr/local/bin/$foldername"
+      sudo rm -r "/usr/local/bin/$appname"
 
 else
 echo -e "$red [$green✘$red]$off If You Want To Install You Must Remove Previous Installations";
@@ -66,6 +68,7 @@ $filetype /usr/share/$foldername/$filename" '${1+"$@"}' > "$appname";
     sudo cp "$foldername" "/usr/local/bin/"
     sudo cp "$appname" "/usr/local/bin/"
     rm "$appname";
+    rm "$foldername.desktop";
 
 if [ -d "/usr/share/$foldername" ] ;
 then
@@ -83,7 +86,14 @@ if [ -d "/usr/bin/" ];then
 banner
 echo -e "$red [$green+$red]$off $foldername Will Be Installed In Your System";
 linux
+echo """
+App Simple Name : $appname
+App icon + type : $appicon
+Folder Name     : $foldername
+File Name + type: $filename
+Start Command   : $filetype
+""" > $foldername.txt
 else
-echo -e "$red [$green✘$red]$off Tool Cannot Be Installed On Your System! Use It As Portable !";
+echo -e "$red [$green✘$red]$off Tool Cannot Be Installed On Your System!";
     exit
 fi
