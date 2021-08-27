@@ -1,99 +1,118 @@
 #!/bin/bash
-# v.0.0.2
 # installer
-# Coded by: Ro0t-96
-# Github: https://github.com/byRo0t96
-#!/bin/bash
-printf '\033]2;installer\a'
-resize -s 30 100 > /dev/null
-function banner() {
-clear
-printf "\e[1;31m"
-echo " ▄█  ███▄▄▄▄      ▄████████     ███        ▄████████  ▄█        ▄█          ▄████████    ▄████████ ";
-echo "███  ███▀▀▀██▄   ███    ███ ▀█████████▄   ███    ███ ███       ███ v.0.0.2 ███    ███   ███    ███ ";
-echo "███▌ ███   ███   ███    █▀     ▀███▀▀██   ███    ███ ███       ███         ███    █▀    ███    ███ ";
-echo "███▌ ███   ███   ███            ███   ▀   ███    ███ ███       ███        ▄███▄▄▄      ▄███▄▄▄▄██▀ ";
-echo "███▌ ███   ███ ▀███████████     ███     ▀███████████ ███       ███       ▀▀███▀▀▀     ▀▀███▀▀▀▀▀   ";
-echo "███  ███   ███          ███     ███       ███    ███ ███       ███         ███    █▄  ▀███████████ ";
-echo "███  ███   ███    ▄█    ███     ███       ███    ███ ███▌    ▄ ███▌    ▄   ███    ███   ███    ███ ";
-echo "█▀    ▀█   █▀   ▄████████▀     ▄████▀     ███    █▀  █████▄▄██ █████▄▄██   ██████████   ███    ███ ";
-echo "                   https://github.com/byRo0t96       ▀         ▀                        ███    ███ ";
-printf "\e[0m"
-read -p $'\e[1;37mRo0t-96>INSTALLER> Enter App Simple Name :' appname
-read -p $'\e[1;37mRo0t-96>INSTALLER> Enter App icon + type :' appicon
-read -p $'\e[1;37mRo0t-96>INSTALLER> Enter Folder Name     :' foldername
-read -p $'\e[1;37mRo0t-96>INSTALLER> Enter File Name + type:' filename
-read -p $'\e[1;37mRo0t-96>INSTALLER> Enter Start Command   :' filetype
+# Coded by: Yasser Bdj (Boudjada Yasser)
+# Github: https://github.com/yasserbdj96
+
+V="v1.0.0"
+
+#install:
+function install() {
+    read -p $'# [*] File PATH : ' filepath
+    filename=$(python3 -c "f='$filepath'.split('/');f=f[len(f)-1];print(f)")
+    name=`echo $filename | cut -d \. -f 1`
+    type=`echo $filename | cut -d \. -f 2`
+    appname=$name
+    foldername=$name
+
+    read -p $' [*] Enter Application Icon PATH : ' appiconpath
+    appicon=$(python3 -c "f='$appiconpath'.split('/');f=f[len(f)-1];print(f)")
+
+    if [ "$type" == "sh" ]; then
+        filetype="bash"
+    elif [ "$type" == "py" ]; then
+        filetype="python3"
+    elif [ "$type" == "pl" ]; then
+        filetype="perl"
+    elif [ "$type" == "rb" ]; then
+        filetype="ruby"
+    fi
+
 echo """[Desktop Entry]
 Name=$foldername
 Comment=$foldername
 Encoding=UTF-8
 Exec=sh -c '$appname;${SHELL:-bash}'
-Icon=$appicon
+Icon=$foldername.png
 StartupNotify=false
 Terminal=true
 Type=Application
 Categories=$foldername;
 X-Kali-Package=$foldername
 Name[C]=$foldername""" > $foldername.desktop
-}
 
-function linux() {
-echo -e "$red [$green+$red]$off Checking directories..."
-if [ -d "/usr/share/$foldername" ]; then
-    echo -e "$red [$green+$red]$off A Directory $foldername Was Found! Do You Want To Replace It? [Y/n]:" ;
-    read replace
-    if [ "$replace" = "y" ]; then
-      sudo rm -r "/usr/share/$foldername"
-      sudo rm "/usr/share/icons/$appicon"
-      sudo rm "/usr/share/applications/$foldername.desktop"
-      sudo rm -r "/usr/local/bin/$appname"
-
-else
-echo -e "$red [$green✘$red]$off If You Want To Install You Must Remove Previous Installations";
-echo -e "$red [$green✘$red]$off Installation Failed";
-        exit
-    fi
-fi 
-
-echo -e "$red [$green+$red]$off Installing ...";
-echo -e "$red [$green+$red]$off Creating Symbolic Link ...";
 echo -e "#!/bin/bash 
 $filetype /usr/share/$foldername/$filename" '${1+"$@"}' > "$appname";
-    chmod +x "$appname";
-    sudo mkdir "/usr/share/$foldername"
-    sudo cp "$foldername"/* "/usr/share/$foldername"
-    sudo cp "$appicon" "/usr/share/icons"
-    sudo cp "$foldername.desktop" "/usr/share/applications"
-    sudo cp "$foldername" "/usr/local/bin/"
-    sudo cp "$appname" "/usr/local/bin/"
-    rm "$appname";
-    rm "$foldername.desktop";
+chmod +x "$appname";
+sudo mkdir "/usr/share/$foldername"
+sudo cp "$filepath" "/usr/share/$foldername"
+sudo cp "$appiconpath" "/usr/share/icons/$foldername.png"
+sudo cp "$foldername.desktop" "/usr/share/applications"
+sudo cp "$foldername" "/usr/local/bin/"
+sudo cp "$appname" "/usr/local/bin/"
+rm "$appname";
+rm "$foldername.desktop";
 
-if [ -d "/usr/share/$foldername" ] ;
-then
-echo -e "$red [$green+$red]$off Tool Successfully Installed And Will Start In 5s!";
-echo -e "$red [$green+$red]$off You can execute tool by typing $appname"
-sleep 5;
-$appname
-else
-echo -e "$red [$green✘$red]$off Tool Cannot Be Installed On Your System! Use It As Portable !";
-    exit
-fi 
+if [ -d "/usr/share/$foldername" ]; then
+    echo -e "Tool Successfully Installed!";
+    echo -e "You can execute tool by typing '$appname'"
+    sleep 2;
+fi
 }
 
-if [ -d "/usr/bin/" ];then
-banner
-echo -e "$red [$green+$red]$off $foldername Will Be Installed In Your System";
-linux
-echo """
-App Simple Name : $appname
-App icon + type : $appicon
-Folder Name     : $foldername
-File Name + type: $filename
-Start Command   : $filetype
-""" > $foldername.txt
+#uninstall:
+function uninstall() {
+    read -p $'# [*] Enter Application Name : ' filename
+
+    name=`echo $filename | cut -d \. -f 1`
+    type=`echo $filename | cut -d \. -f 2`
+    appname=$name
+    foldername=$name
+
+echo -e "Checking directories..."
+if [ -d "/usr/share/$foldername" ]; then
+    echo -e "A Directory $foldername Was Found! Do You Want To Unistall It? [Y/n]:" ;
+    read replace
+    if [ "$replace" = "Y" ]; then
+      sudo rm -r "/usr/local/bin/$appname"
+      sudo rm -r "/usr/share/$foldername"
+      sudo rm "/usr/share/icons/$foldername.png"
+      sudo rm "/usr/share/applications/$foldername.desktop"
+    fi
+fi
+}
+
+
+#start script:
+if [ "$1" == "-i" ]; then
+    printf '\033]2;installer\a'
+    printf "\e[1;31m"
+    echo " ▄█  ███▄▄▄▄      ▄████████     ███        ▄████████  ▄█        ▄█          ▄████████    ▄████████ ";
+    echo "███  ███▀▀▀██▄   ███    ███ ▀█████████▄   ███    ███ ███       ███         ███    ███   ███    ███ ";
+    echo "███▌ ███   ███   ███    █▀     ▀███▀▀██   ███    ███ ███       ███         ███    █▀    ███    ███ ";
+    echo "███▌ ███   ███   ███            ███   ▀   ███    ███ ███       ███        ▄███▄▄▄      ▄███▄▄▄▄██▀ ";
+    echo "███▌ ███   ███ ▀███████████     ███     ▀███████████ ███       ███       ▀▀███▀▀▀     ▀▀███▀▀▀▀▀   ";
+    echo "███  ███   ███          ███     ███       ███    ███ ███       ███         ███    █▄  ▀███████████ ";
+    echo "███  ███   ███    ▄█    ███     ███       ███    ███ ███▌    ▄ ███▌    ▄   ███    ███   ███    ███ ";
+    echo "█▀    ▀█   █▀   ▄████████▀     ▄████▀     ███    █▀  █████▄▄██ █████▄▄██   ██████████   ███    ███ ";
+    echo "                                                     ▀         ▀                        ███    ███ ";
+    printf "\e[0m"
+python3 -c "import yasserbdj96;print(yasserbdj96.about('$V'))"
+    install
+elif [ "$1" == "-u" ]; then
+    printf '\033]2;uninstaller\a'
+    printf "\e[1;31m"
+    echo " █    ██  ███▄    █  ██▓ ███▄    █   ██████ ▄▄▄█████▓ ▄▄▄       ██▓     ██▓    ▓█████  ██▀███   ";
+    echo " ██  ▓██▒ ██ ▀█   █ ▓██▒ ██ ▀█   █ ▒██    ▒ ▓  ██▒ ▓▒▒████▄    ▓██▒    ▓██▒    ▓█   ▀ ▓██ ▒ ██▒ ";
+    echo "▓██  ▒██░▓██  ▀█ ██▒▒██▒▓██  ▀█ ██▒░ ▓██▄   ▒ ▓██░ ▒░▒██  ▀█▄  ▒██░    ▒██░    ▒███   ▓██ ░▄█ ▒ ";
+    echo "▓▓█  ░██░▓██▒  ▐▌██▒░██░▓██▒  ▐▌██▒  ▒   ██▒░ ▓██▓ ░ ░██▄▄▄▄██ ▒██░    ▒██░    ▒▓█  ▄ ▒██▀▀█▄   ";
+    echo "▒▒█████▓ ▒██░   ▓██░░██░▒██░   ▓██░▒██████▒▒  ▒██▒ ░  ▓█   ▓██▒░██████▒░██████▒░▒████▒░██▓ ▒██▒ ";
+    echo "░▒▓▒ ▒ ▒ ░ ▒░   ▒ ▒ ░▓  ░ ▒░   ▒ ▒ ▒ ▒▓▒ ▒ ░  ▒ ░░    ▒▒   ▓▒█░░ ▒░▓  ░░ ▒░▓  ░░░ ▒░ ░░ ▒▓ ░▒▓░ ";
+    echo "░░▒░ ░ ░ ░ ░░   ░ ▒░ ▒ ░░ ░░   ░ ▒░░ ░▒  ░ ░    ░      ▒   ▒▒ ░░ ░ ▒  ░░ ░ ▒  ░ ░ ░  ░  ░▒ ░ ▒░ ";
+    echo " ░░░ ░ ░    ░   ░ ░  ▒ ░   ░   ░ ░ ░  ░  ░    ░        ░   ▒     ░ ░     ░ ░      ░     ░░   ░  ";
+    echo "   ░              ░  ░           ░       ░                 ░  ░    ░  ░    ░  ░   ░  ░   ░      ";
+    printf "\e[0m"
+python3 -c "import yasserbdj96;print(yasserbdj96.about('$V'))"
+    uninstall
 else
-echo -e "$red [$green✘$red]$off Tool Cannot Be Installed On Your System!";
-    exit
+    echo "usage: $0 <OPTION>"
 fi

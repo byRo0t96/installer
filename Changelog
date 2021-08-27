@@ -1,6 +1,10 @@
-v.0.0.2
--add uninstall
--fix bugs
+v1.0.0
+- Rebuild.
+- Fix bugs.
 
-v.0.0.1
--first build
+v0.0.2
+- Add uninstall.
+- Fix bugs.
+
+v0.0.1
+- First build.
